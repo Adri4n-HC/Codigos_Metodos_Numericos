@@ -1,41 +1,59 @@
 import math
 
-def falsa_posicion():
-    print("--- Método de Falsa Posición ---")
-    func_str = input("f(x) = ").replace('^', '**')
+def biseccion():
+    print("--- Método de Bisección ---")
+    
+    # 1. Entrada de la función y parámetros
+    func_str = input("Introduce f(x) (ejemplo: x**3 + 4*x**2 - 10): ").replace('^', '**')
     
     def f(x):
-        return eval(func_str, {"x": x, "math": math, "__builtins__": None}, 
-                    {"sin": math.sin, "cos": math.cos, "exp": math.exp, "log": math.log, "sqrt": math.sqrt})
+        # Permite usar funciones de math como sin, cos, exp, etc.
+        return eval(func_str, {"x": x, "__builtins__": None}, {
+            "sin": math.sin, "cos": math.cos, "exp": math.exp, 
+            "log": math.log, "sqrt": math.sqrt, "tan": math.tan
+        })
 
-    a = float(input("Límite inferior (a): "))
-    b = float(input("Límite superior (b): "))
-    tol = float(input("Tolerancia: "))
-    max_iter = int(input("Máximo de iteraciones: "))
+    try:
+        a = float(input("Límite inferior (a): "))
+        b = float(input("Límite superior (b): "))
+        tol = float(input("Margen de error (tolerancia): "))
+        max_iter = int(input("Máximo de iteraciones: "))
 
-    if f(a) * f(b) >= 0:
-        print("Error: No hay cambio de signo en el intervalo.")
-        return
+        # 2. Validación del Teorema de Bolzano
+        if f(a) * f(b) >= 0:
+            print("\n[!] Error: f(a) y f(b) no tienen signos opuestos.")
+            print("No se garantiza una raíz en este intervalo.")
+            return
 
-    print(f"\n{'Iter':<5} | {'a':<10} | {'b':<10} | {'xr':<10} | {'f(xr)':<10}")
-    print("-" * 60)
+        # 3. Encabezado de la tabla de resultados
+        print(f"\n{'Iter':<5} | {'a':<10} | {'b':<10} | {'m':<10} | {'f(m)':<10} | {'Error':<10}")
+        print("-" * 75)
 
-    for i in range(1, max_iter + 1):
-        # Fórmula de Falsa Posición
-        xr = b - (f(b) * (a - b)) / (f(a) - f(b))
-        fxr = f(xr)
+        # 4. Ciclo de iteraciones
+        for i in range(1, max_iter + 1):
+            m = (a + b) / 2
+            fm = f(m)
+            error = abs(b - a) / 2 # Error absoluto máximo
+            
+            print(f"{i:<5} | {a:<10.6f} | {b:<10.6f} | {m:<10.6f} | {fm:<10.6f} | {error:<10.6f}")
+
+            # Condición de parada
+            if error < tol or abs(fm) < 1e-15:
+                print("-" * 75)
+                print(f"Raíz aproximada encontrada en x = {m:.6f}")
+                return
+
+            # Decidir el nuevo intervalo
+            if f(a) * fm < 0:
+                b = m
+            else:
+                a = m
         
-        print(f"{i:<5} | {a:<10.6f} | {b:<10.6f} | {xr:<10.6f} | {fxr:<10.6f}")
+        print("-" * 75)
+        print("Aviso: Se alcanzó el máximo de iteraciones.")
 
-        if abs(fxr) < tol:
-            break
-        
-        if f(a) * fxr < 0:
-            b = xr
-        else:
-            a = xr
-
-    print(f"\nRaíz aproximada: {xr:.6f}")
+    except Exception as e:
+        print(f"\n[!] Error en los datos: {e}")
 
 if __name__ == "__main__":
-    falsa_posicion()
+    biseccion()
