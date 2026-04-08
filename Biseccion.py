@@ -4,7 +4,7 @@ def biseccion():
     print("--- Método de Bisección ---")
     
     # 1. Entrada de la función y parámetros
-    func_str = input("Introduce f(x) (ejemplo: x**3 + 4*x**2 - 10): ").replace('^', '**')
+    func_str = input("Introduce f(x) (ejemplo: x**3 - 2*x - 5): ").replace('^', '**')
     
     def f(x):
         # Permite usar funciones de math como sin, cos, exp, etc.
