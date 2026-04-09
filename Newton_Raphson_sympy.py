@@ -1,6 +1,6 @@
-import sympy as sp #es necesario tener instalada la carpeta sympy
+import sympy as sp
 
-def newton_raphson_sympy():
+def newton_raphson_automatico():
     print("--- Método de Newton-Raphson (Derivada Automática) ---")
     
     # 1. Definir la variable simbólica
